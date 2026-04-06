@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0f1115;
+  --foreground: #e7ecf5;
+  --foreground-muted: #aeb9ce;
+  --card: #151a22;
+  --card-strong: #1c2431;
+  --border: rgba(231, 236, 245, 0.12);
+  --accent: #f5b65b;
+  --accent-strong: #ff8c42;
+  --accent-soft: rgba(245, 182, 91, 0.18);
+  --success: #47d18c;
+  --danger: #ff6f6f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --font-sans: var(--font-space-grotesk);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+.hero-gradient {
+  background: radial-gradient(
+      circle at top left,
+      rgba(255, 140, 66, 0.25),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(71, 209, 140, 0.2),
+      transparent 48%
+    ),
+    linear-gradient(140deg, rgba(15, 17, 21, 0.95), rgba(21, 26, 34, 0.85));
+}
+
+.glass {
+  background: rgba(21, 26, 34, 0.72);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(8, 10, 13, 0.45);
+  backdrop-filter: blur(16px);
+}
+
+.gridlines {
+  background-image: linear-gradient(
+      rgba(231, 236, 245, 0.06) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(231, 236, 245, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.fade-up {
+  animation: fadeUp 0.7s ease forwards;
+}
+
+.fade-up.delay-1 {
+  animation-delay: 0.08s;
+}
+
+.fade-up.delay-2 {
+  animation-delay: 0.16s;
+}
+
+.fade-up.delay-3 {
+  animation-delay: 0.24s;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
