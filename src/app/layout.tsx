@@ -18,8 +18,9 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Firebase CRUD Studio",
-  description: "A simple Firestore CRUD app built with Next.js.",
+  title: "ProManage",
+  description:
+    "Student project tracker powered by Next.js and Firebase services.",
 };
 
 export default function RootLayout({
