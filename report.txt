@@ -1,0 +1,73 @@
+ProManage – Cloud-Focused Project Summary
+
+Project Overview
+ProManage is a full-stack student project tracker built with Next.js (App Router) and Firebase. The app supports authenticated task management, per-user data isolation, file attachments, cloud activity logging, analytics tracking, and managed hosting. It is designed as a practical cloud-native CRUD application using Google Firebase services end to end.
+
+Core Cloud Architecture
+1. Firebase Authentication
+- Supports Email/Password and Google sign-in.
+- Authentication state controls access to the application UI and cloud data.
+- Access errors such as unauthorized-domain were handled by configuring Authorized Domains in Firebase Authentication settings.
+
+2. Cloud Firestore (Primary Database)
+- Stores task records in a tasks collection.
+- Real-time listeners (onSnapshot) keep UI synchronized instantly.
+- Data model includes owner identity, task metadata, status/priority, due date, attachment references, and timestamps.
+- Security model enforces owner-based isolation:
+  - Read: authenticated user can read only documents where ownerId == request.auth.uid
+  - Create: ownerId must match authenticated user ID
+  - Update/Delete: allowed only for task owner
+
+3. Firebase Storage (Object Storage)
+- Stores task attachments in structured paths:
+  attachments/{userId}/{taskId}/{timestamp-filename}
+- Upload and download URLs are integrated into the task workflow.
+- Storage security rules ensure users can only read/write their own path segment (request.auth.uid == userId).
+
+4. Cloud Functions (Event-Driven Backend)
+- Firestore triggers log task lifecycle events:
+  - task_created
+  - task_updated
+  - task_deleted
+- Functions write audit entries to an activity collection.
+- This creates an immutable-style operational trail without relying on client trust.
+
+5. Firebase Analytics
+- Client events are logged for usage insights (e.g., login method, task/file actions).
+- Measurement ID is required to activate analytics in production environments.
+- Analytics is optional for core functionality but important for product monitoring.
+
+6. Hosting Strategy
+- Deployed using Firebase-managed hosting workflow for Next.js.
+- Build/runtime environment variables are required in hosting backend settings.
+- Critical deployment lesson: NEXT_PUBLIC Firebase variables must be available at build time to avoid prerender/build failures.
+
+Security and Governance Highlights
+- Principle of least privilege applied via Firestore and Storage security rules.
+- Per-user data and file segregation is enforced in cloud rules, not only in frontend logic.
+- Domain restrictions in Auth settings protect Google OAuth flows.
+- Cloud Functions centralize audit logging for traceability.
+
+Operational Learnings and Resolved Issues
+- App Hosting backend IDs must use lowercase letters, digits, and hyphens only.
+- Build error auth/invalid-api-key indicates missing/misconfigured environment variables during build.
+- auth/unauthorized-domain indicates missing Authorized Domain for Google sign-in.
+- Storage can run on free tier for small use, while full serverless workloads commonly require Blaze plan.
+
+Current Cloud Readiness
+- Authentication: Configured and functioning.
+- Firestore: Created, rules applied, CRUD active.
+- Storage: Configured with path-based access rules.
+- Functions: Designed for activity logging and ready for deploy on Blaze.
+- Hosting: Configured with cloud deployment workflow and environment variable requirements identified.
+
+Recommended Next Enhancements
+- Add stricter Firestore field validation rules (types/allowed values).
+- Add Storage constraints (file type/size checks via rules or backend validation).
+- Add monitoring/alerts for function errors and usage spikes.
+- Add backup/export strategy for Firestore and Storage.
+
+Technology Stack
+- Frontend: Next.js 16 + React 19 + TypeScript
+- Cloud Platform: Firebase (Auth, Firestore, Storage, Functions, Analytics, Hosting)
+- Styling/UI: Tailwind CSS
